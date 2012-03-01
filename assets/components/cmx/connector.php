@@ -25,18 +25,19 @@
  * @package cmx
  */
 
- // FirePHP
- require_once('/Users/justin/Sites/FirePHPCore/fb.php');
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 require_once dirname(dirname(dirname(dirname(__FILE__)))).'/config.core.php';
 require_once MODX_CORE_PATH.'config/'.MODX_CONFIG_KEY.'.inc.php';
 require_once MODX_CONNECTORS_PATH.'index.php';
 
-
-
 $corePath = $modx->getOption('cmx.core_path',null,$modx->getOption('core_path').'components/cmx/');
 require_once $corePath.'model/cmx/cmx.class.php';
 $modx->cmx = new cmx($modx);
+
+// FirePHP
+ require_once $corePath.'library/FirePHPCore/fb.php';
 
 // CM Create Send Handler
 if (!$modx->loadClass('CMHandler',$corePath.'model/cmx/',true,true)) {

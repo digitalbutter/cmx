@@ -13,7 +13,7 @@ cmx.page.Home = function(config) {
         	{
         		text: "Create"
         		,handler: function(){
-        			window.location.href = "index.php?&action=edit&a=" + MODx.request.a;
+        			window.location.href = "index.php?&action=edit&mode=new&a=" + MODx.request.a;
         		}
         	}
         ]

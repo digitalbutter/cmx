@@ -101,6 +101,14 @@ cmx.panel.CampaignForm = function(config) {
                         ,xtype: 'modx-superbox-lists'
                         ,resizable: true
                         ,width: 500
+                    }
+                    ,{
+                        fieldLabel: _('cmx.segments_label')
+                        ,id: 'cmx-superbox-segments'
+                        ,name: 'segments[]'
+                        ,xtype: 'modx-superbox-segments'
+                        ,resizable: true
+                        ,width: 500
                     }]
                 }]
             }]

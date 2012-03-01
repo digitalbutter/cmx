@@ -37,6 +37,15 @@ cmx.grid.Scheduled = function(config) {
             ,dataIndex: 'PreviewURL'
             ,width: 86
         }]
+        ,tbar: [{
+            text: _('cmx.force_refresh')
+            ,handler: function() {
+                this.getStore().setBaseParam('refresh', true);
+                this.refresh();
+                this.getStore().setBaseParam('refresh', false);
+            }
+            ,scope: this
+        }]
     });
     cmx.grid.Scheduled.superclass.constructor.call(this,config);
 };

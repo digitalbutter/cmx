@@ -26,15 +26,16 @@ class CMHandler {
     	$filename = 'sent_campaigns.json';
     	$this->loadWrapperClass('csrest_clients');
     	$list = array();
-
+    	FB::log($this->_force_flush);
+    	// FB::log((empty($list) ? ''))
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename)) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
     		FB::log('Cached Results');
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (!$list) {
+    	if (empty($list) || $this->_force_flush === true) {
     		FB::log('Uncached Results');
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
@@ -59,12 +60,12 @@ class CMHandler {
     	$list = array();
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename)) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (!is_array($list)) {
+    	if (!is_array($list) || $this->_force_flush === true) {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_scheduled();
@@ -88,12 +89,12 @@ class CMHandler {
     	$list = array();
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename)) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (!$list) {
+    	if (empty($list) || $this->_force_flush === true) {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_drafts();
@@ -118,15 +119,46 @@ class CMHandler {
     	$list = array();
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename)) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (!$list) {
+    	if (empty($list) || $this->_force_flush === true) {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_lists();
+
+			
+			foreach ($result->response as $item) {
+			    array_push($list,$this->objectToArray($item)); 
+			}
+
+			FB::log($list);
+			$this->setCached($filename, $list);
+			$this->setCacheExpiry($filename);
+		}
+		
+		$this->resultCount = count($list);
+		return $list; 
+    }
+
+    // get Subscriber Lists
+    function getSegments() {
+    	$filename = 'subscriber_segments.json';
+    	$this->loadWrapperClass('csrest_clients');
+    	$list = array();
+
+    	// Check for fresh cached results
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
+    		$list = $this->getCached($filename);
+    	}
+    	
+    	// Uncached Results
+    	if (empty($list) || $this->_force_flush === true) {
+    		$list = array();
+    		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
+    		$result = $wrap->get_segments();
 
 			
 			foreach ($result->response as $item) {
@@ -151,6 +183,15 @@ class CMHandler {
 
     	$this->resultCount = count($list);
     	return $list;
+    }
+
+    function createCampaign($campaignData) {
+    	$this->loadWrapperClass('csrest_campaigns');
+
+    	$wrap = new CS_REST_Campaigns('', $this->_api_key);
+    	$campaign = $wrap->create($this->_client_id, $campaignData);
+    	FB::log($campaignId);
+    	return $campaign;
     }
 
     // Loads CM-CS class, throws error if not found
@@ -215,12 +256,13 @@ class CMHandler {
 	}
 
 	// grab the cache file and decode it
-	function getCached($filename) {
+	function getCached($filename, $useJSON = true) {
 		$path = $this->cache_path . $filename;
 		$cached = '';
 		if (file_exists($path)) {
 			if ($cached = file_get_contents($path)) {
-				return json_decode($cached, true);
+				$results = ($useJSON) ? json_decode($cached, true) : $cached;
+				return $results;
 			} else {
 				$this->modx->log(modX::LOG_LEVEL_ERROR,'[CMx] Problem opening cache file ('.$filename.').');
 				return false;
@@ -232,11 +274,12 @@ class CMHandler {
 	}
 
 	// save a new cache file
-	function setCached($filename, $array) {
+	function setCached($filename, $data, $useJSON = true) {
 		$path = $this->cache_path . $filename;
+		$data = ($useJSON) ? json_encode($data) : $data;
 
-		if($array) { 
-		    if(file_put_contents($path, json_encode($array))) {
+		if($data) { 
+		    if(file_put_contents($path, $data)) {
 		      	return true;
 		    }
 		    // unable to save
@@ -251,6 +294,62 @@ class CMHandler {
 			return false;
 		}
 	}
+
+	function removeCached($filename) {
+		$path = $this->cache_path . $filename;
+
+		if (file_exists($path)) {
+			unlink($path);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+    function setCampaignCache($content) {
+    	$rand = rand(111111111, 999999999);
+    	$filename_html = $rand.'.html';
+    	$filename_txt = $rand.'.txt';
+
+    	if (!file_exists($this->cache_path.'campaigns/'.$filename_html)) {
+    		if(!$this->setCached('campaigns/'.$filename_html, $content, false)) {
+    			// problem saving html copy
+    			return false;
+    		}
+    	} else return false;
+
+    	if (!file_exists($this->cache_path.'campaigns/'.$filename_txt)) {
+	    	if(!$this->setCached('campaigns/'.$filename_txt, $content, false)) {
+				// problem saving txt copy
+				return false;
+			}
+		} else return false;
+
+		return $rand;
+    }
+
+    function removeCampaignCache($fileId) {
+    	$filename_html = $fileId.'.html';
+    	$filename_txt = $fileId.'.txt';
+
+    	if (!$this->removeCached('campaigns/'.$filename_html)) {
+    		return false;
+    	}
+
+    	if (!$this->removeCached('campaigns/'.$filename_txt)) {
+    		return false;
+    	}
+
+    	return true;
+    }
+
+    function getCampaignCache($filename) {
+    	$content = $this->getCached('campaigns/'.$filename, false);
+
+    	if ($content) {
+			return $content;
+    	} else return false;
+    }
 
 	function sortResults($data, $sort, $dir) {
 		if(!empty($sort)) {

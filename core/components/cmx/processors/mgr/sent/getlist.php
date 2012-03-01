@@ -26,6 +26,8 @@
  * @subpackage processors
  */
 
+$refresh = $modx->getOption('refresh', $_REQUEST, false);
+
 $isLimit = !empty($_REQUEST['limit']);
 $start = $modx->getOption('start',$_REQUEST,0);
 $limit = $modx->getOption('limit',$_REQUEST,20);
@@ -45,7 +47,7 @@ $dir = $modx->getOption('dir',$_REQUEST,'ASC');
 //     $list[]= $itemArray;
 // }
 
-$cm = new CMHandler($modx);
+$cm = new CMHandler($modx, $refresh);
 
 $list = $cm->getSentCampaigns();
 $list = $cm->searchResults($list, '');

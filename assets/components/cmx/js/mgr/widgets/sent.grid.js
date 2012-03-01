@@ -39,6 +39,15 @@ cmx.grid.Sent = function(config) {
             ,dataIndex: 'WebVersionURL'
             ,width: 86
         }]
+        ,tbar: [{
+            text: _('cmx.force_refresh')
+            ,handler: function() {
+                this.getStore().setBaseParam('refresh', true);
+                this.refresh();
+                this.getStore().setBaseParam('refresh', false);
+            }
+            ,scope: this
+        }]
     });
     cmx.grid.Sent.superclass.constructor.call(this,config);
 };
@@ -68,19 +77,6 @@ Ext.extend(cmx.grid.Sent,MODx.grid.Grid,{
         var r = this.menu.record;
         window.open(r["WebVersionURL"]);
         console.log(r);
-    }
-    ,createItem: function(btn,e) {
-        window.location.href = MODx.config.manager_url+"?action=new&a="+MODx.request.a;
-        if (!this.windows.createItem) {
-            this.windows.createItem = MODx.load({
-                xtype: 'cmx-window-item-create'
-                ,listeners: {
-                    'success': {fn:function() { this.refresh(); },scope:this}
-                }
-            });
-        }
-        this.windows.createItem.fp.getForm().reset();
-        this.windows.createItem.show(e.target);
     }
     ,getSentInfo: function(btn,e) {
         this.showCampaignInfo = MODx.load({
@@ -113,38 +109,6 @@ Ext.extend(cmx.grid.Sent,MODx.grid.Grid,{
     }
 });
 Ext.reg('cmx-grid-sent',cmx.grid.Sent);
-
-
-
-
-cmx.window.CreateItem = function(config) {
-    config = config || {};
-    this.ident = config.ident || 'mecitem'+Ext.id();
-    Ext.applyIf(config,{
-        title: _('cmx.item_create')
-        ,id: this.ident
-        ,height: 150
-        ,width: 475
-        ,url: cmx.config.connector_url
-        ,action: 'mgr/sent/create'
-        ,fields: [{
-            xtype: 'textfield'
-            ,fieldLabel: _('name')
-            ,name: 'name'
-            ,id: 'cmx-'+this.ident+'-name'
-            ,width: 300
-        },{
-            xtype: 'textarea'
-            ,fieldLabel: _('description')
-            ,name: 'description'
-            ,id: 'cmx-'+this.ident+'-description'
-            ,width: 300
-        }]
-    });
-    cmx.window.CreateItem.superclass.constructor.call(this,config);
-};
-Ext.extend(cmx.window.CreateItem,MODx.Window);
-Ext.reg('cmx-window-item-create',cmx.window.CreateItem);
 
 
 cmx.window.SentCampaignInfo = function(config) {

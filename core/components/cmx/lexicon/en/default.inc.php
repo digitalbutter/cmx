@@ -54,6 +54,7 @@ $_lang['cmx.preview_url'] = 'Preview URL';
 $_lang['cmx.get_info'] = 'Get Campaign Details';
 $_lang['cmx.campaign_info'] = 'Campaign Details';
 $_lang['cmx.delete_campaign'] = 'Delete Campaign';
+$_lang['cmx.force_refresh'] = 'Force Refresh';
 
 $_lang['cmx.draft_campaigns'] = 'Draft Campaigns';
 $_lang['cmx.draft_campaigns_intro'] = 'View Draft Campaigns';
@@ -67,6 +68,7 @@ $_lang['cmx.create_campaign'] = 'Create Campaign';
 $_lang['cmx.campaign'] = 'Campaign';
 $_lang['cmx.campaign_content'] = 'Content';
 $_lang['cmx.lists'] = 'Lists';
+$_lang['cmx.segments_label'] = 'Segments';
 $_lang['cmx.lists_intro'] = 'Subscriber Lists to send to.';
 
 // campaign tab content

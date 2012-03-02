@@ -27,7 +27,7 @@ class CMHandler {
     	$this->loadWrapperClass('csrest_clients');
     	$list = array();
     	FB::log($this->_force_flush);
-    	// FB::log((empty($list) ? ''))
+    	
     	// Check for fresh cached results
     	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
     		FB::log('Cached Results');

@@ -62,6 +62,12 @@ $_lang['cmx.draft_campaigns_intro'] = 'View Draft Campaigns';
 $_lang['cmx.scheduled_campaigns'] = 'Scheduled Campaigns';
 $_lang['cmx.scheduled_campaigns_intro'] = 'View Scheduled Campaigns';
 
+// campaign form buttons
+$_lang['cmx.save_draft'] = 'Save Draft';
+$_lang['cmx.confirm_save_draft'] = 'Are you sure want to save this campaign draft?  This will lock the campaign and content tabs, and allow you to schedule and preview the campaign.';
+$_lang['cmx.edit_draft'] = 'Edit Draft';
+$_lang['cmx.send_campaign'] = 'Send Campaign';
+
 // campaign form tabs
 $_lang['cmx.new_campaign'] = 'New Campaign';
 $_lang['cmx.create_campaign'] = 'Create Campaign';
@@ -69,6 +75,7 @@ $_lang['cmx.campaign'] = 'Campaign';
 $_lang['cmx.campaign_content'] = 'Content';
 $_lang['cmx.lists'] = 'Lists';
 $_lang['cmx.segments_label'] = 'Segments';
+$_lang['cmx.schedule_preview'] = 'Schedule and Test Campaign';
 $_lang['cmx.lists_intro'] = 'Subscriber Lists to send to.';
 
 // campaign tab content
@@ -78,13 +85,15 @@ $_lang['cmx.campaign_subject_label'] = 'Enter the email subject for this campaig
 $_lang['cmx.campaign_from_name_label'] = 'The name of the sender of this campaign';
 $_lang['cmx.campaign_from_email_label'] = 'The email address of the sender of this campaign';
 $_lang['cmx.campaign_replyto_label'] = 'Replies should be sent to';
+$_lang['cmx.lists_label'] = 'Lists';
 
 // content tab content
 $_lang['cmx.campaign_content_intro'] = 'Campaign Content';
 $_lang['cmx.campaign_content_label'] = 'Campaign Content';
 
-// lists tab content
-$_lang['cmx.lists_label'] = 'Lists';
+// schedule tab content
+$_lang['cmx.campaign_content_label'] = 'Schedule and Test Campaign';
+$_lang['cmx.schedule_campaign'] = 'Send the campaign at';
 
 // buttons
 $_lang['cmx.back'] = 'Cancel';

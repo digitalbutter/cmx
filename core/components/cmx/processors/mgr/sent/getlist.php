@@ -52,6 +52,7 @@ $cm = new CMHandler($modx, $refresh);
 $list = $cm->getSentCampaigns();
 $list = $cm->searchResults($list, '');
 $list = $cm->sortResults($list, $sort, $dir);
+$list = array_slice($list, $start, $limit);
 $count = $cm->getCount();
 
 

@@ -30,7 +30,48 @@ cmx.page.Edit = function(config) {
             ,id: 'cmx-button-send_campaign'
             ,hidden: (mode == 'new') ? true : false
             ,handler: function() {
-                // @TODO stub
+                var id = Ext.getCmp('cmx-panel-edit').config.record.id;
+                var confirmationEmail = Ext.getCmp('cmx-campaign-confirmation_email').getValue();
+                var schedule = Ext.getCmp('cmx-campaign-schedule').getValue();
+
+                MODx.msg.confirm({
+                    title: _('cmx.send_campaign')
+                    ,text: _('cmx.send_confirm_confirm')
+                    ,url: Ext.getCmp('cmx-panel-edit').config.url
+                    ,params: {
+                        action: 'mgr/campaign_form/send_campaign'
+                        ,id: id
+                        ,confirmation_email: confirmationEmail
+                        ,publish_at: schedule
+                        ,listeners: {
+                            'success': {fn:function(r) {
+                                
+                            }
+                            ,scope:this}
+                        }
+                    }
+                });
+            }
+        },{
+            text: _('cmx.test_campaign')
+            ,id: 'cmx-button-test_campaign'
+            ,hidden: (mode == 'new') ? true : false
+            ,handler: function() {
+                var id = Ext.getCmp('cmx-panel-edit').config.record.id;
+                var recipients = Ext.getCmp('cmx-preview_recipients').getValue();
+                console.log('id = '+id);
+                console.log('recipients = '+recipients);
+
+                MODx.msg.confirm({
+                    title: _('cmx.test_campaign')
+                    ,text: _('cmx.test_campaign_confirm')
+                    ,url: Ext.getCmp('cmx-panel-edit').config.url
+                    ,params: {
+                        action: 'mgr/campaign_form/send_test'
+                        ,id: id
+                        ,recipients: recipients
+                    }
+                });
             }
         },{
             text: _('cmx.edit_draft')

@@ -23,7 +23,6 @@ cmx.panel.CampaignForm = function(config) {
         ,listeners: {
             'setup': {fn:this.setup,scope:this}
             ,'success': {fn:this.success,scope:this}
-            ,'afterrender':{fn:this.ready}
         }
         ,items: [{
             html: '<h2>'+_('cmx.new_campaign')+'</h2>'
@@ -35,7 +34,7 @@ cmx.panel.CampaignForm = function(config) {
             ,itemId: 'form-campaign'
             ,defaults: { border: false ,msgTarget: 'side' }
             ,layout: 'form'
-            ,id: 'modx-template-form'
+            ,id: 'cmx-form-campaign'
             ,labelWidth: 150
             ,items: [{
                 html: '<p>'+_('cmx.campaign_intro')+'</p>'
@@ -148,11 +147,11 @@ cmx.panel.CampaignForm = function(config) {
             title: _('cmx.schedule_preview')
             ,itemId: 'form-schedule'
             ,id: 'cmx-form-schedule'
-            // ,disabled: true
+            ,disabled: (mode == 'new') ? true : false
             ,layout: 'form'
             ,defaults: { autoHeight: true }
             ,items: [{
-                html: '<p>'+_('cmx.campaign_content_label')+'</p>'
+                html: '<p>'+_('cmx.form_schedule_label')+'</p>'
                 ,bodyCssClass: 'panel-desc'
                 ,border: false
             },{
@@ -162,18 +161,46 @@ cmx.panel.CampaignForm = function(config) {
                 ,cls:'main-wrapper'
                 ,labelAlign: 'top'
                 ,items: [{
+                    xtype: 'textfield'
+                    ,fieldLabel: _('cmx.confirmation_email_label')
+                    ,name: 'confirmation_email'
+                    ,id: 'cmx-campaign-confirmation_email'
+                    ,allowBlank: true
+                    ,width: 500
+                    // ,value: config.record.content || ''
+                },{
                     xtype: 'xdatetime'
                     ,fieldLabel: _('cmx.schedule_campaign')
                     // ,description: '<b>[[*publishedon]]</b><br />'+_('resource_publishedon_help')
                     ,name: 'campaign_send_at'
                     ,id: 'cmx-campaign-schedule'
-                    ,allowBlank: false
-                    ,dateFormat: MODx.config.manager_date_format
-                    ,timeFormat: MODx.config.manager_time_format
+                    ,allowBlank: true
+                    ,dateFormat: 'Y-m-d'
+                    ,timeFormat: 'g:i a'
                     ,dateWidth: 120
                     ,timeWidth: 120
                     // ,value: config.record.publishedon
                 }]
+            }
+            ,{
+                html: '<p>'+_('cmx.form_preview_recipients_label')+'</p>'
+                ,bodyCssClass: 'panel-desc'
+                ,border: false 
+            },{
+                xtype: 'panel'
+                ,border: false
+                ,layout: 'form'
+                ,cls:'main-wrapper'
+                ,labelAlign: 'top'
+                ,items: [{
+                    fieldLabel: _('cmx.preview_recipients_label')
+                    // ,cls: 'new-item'
+                    ,id: 'cmx-preview_recipients'
+                    ,name: 'recipients'
+                    ,xtype: 'textfield'
+                    // ,resizable: true
+                    ,width: 500
+                }] 
             }]
         }],{
             id: 'modx-tabs'
@@ -189,11 +216,6 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
     initialized: false
     ,setup: function() {
         if (this.initialized) { this.clearDirty(); return true; }
-
-        // if (mode == 'new') {
-        //     Ext.get('cmx-button-send_campaign').hide();
-        //     Ext.get('cmx-button-edit_draft').hide();
-        // }
 
         this.getForm().setValues(this.config.record);
         // if (!Ext.isEmpty(this.config.record.templatename)) {
@@ -214,29 +236,20 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
     }
     ,success: function(r) {
         Ext.getCmp('cmx-form-schedule').setDisabled(false);
+        Ext.getCmp('modx-tabs').setActiveTab('form-schedule');
+        Ext.getCmp('cmx-button-save_draft').hide();
+        Ext.getCmp('cmx-button-send_campaign').show();
+        Ext.getCmp('cmx-button-test_campaign').show();
+        Ext.getCmp('cmx-button-edit_draft').show();
 
         var form_elements = [];
         form_elements = lookForElements(this,form_elements);
 
         for(var j = 0, lenj = form_elements.length; j < lenj; j ++){
-            form_elements[j].setDisabled(false); // @TODO change this back to true
+            form_elements[j].setDisabled(true);
         }
 
-
-        // if (MODx.request.id) Ext.getCmp('modx-grid-element-properties').save();
-        // Ext.getCmp('modx-grid-template-tv').getStore().commitChanges();
-        // this.getForm().setValues(r.result.object);
-        
-        // var t = Ext.getCmp('modx-element-tree');
-        // if (t) {
-        //     var c = Ext.getCmp('modx-template-category').getValue();
-        //     var u = c != '' && c != null && c != 0 ? 'n_template_category_'+c : 'n_type_template';
-        //     var node = t.getNodeById('n_template_element_' + Ext.getCmp('modx-template-id').getValue() + '_' + r.result.object.previous_category);
-        //     if (node) node.destroy();
-        //     t.refreshNode(u,true);
-        // }
-    }
-    ,ready: function() {
+        this.config.record.id = r.result.object.response;
 
     }
 });

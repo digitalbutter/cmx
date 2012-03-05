@@ -13,6 +13,7 @@ $cm = new CMHandler($modx, $refresh);
 $list = $cm->getDraftCampaigns();
 $list = $cm->searchResults($list, '');
 $list = $cm->sortResults($list, $sort, $dir);
+$list = array_slice($list, $start, $limit);
 $count = $cm->getCount();
 
 return $this->outputArray($list,$count);

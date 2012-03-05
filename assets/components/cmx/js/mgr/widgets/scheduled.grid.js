@@ -59,8 +59,8 @@ Ext.extend(cmx.grid.Scheduled,MODx.grid.Grid,{
            ,handler: this.viewWebVersion
         });
         m.push({
-            text: _('cmx.item_update')
-            ,handler: this.updateItem
+            text: _('cmx.unschedule_campaign')
+            ,handler: this.unschedule
         });
         m.push('-');
         m.push({
@@ -87,7 +87,7 @@ Ext.extend(cmx.grid.Scheduled,MODx.grid.Grid,{
         this.windows.createItem.fp.getForm().reset();
         this.windows.createItem.show(e.target);
     }
-    ,updateItem: function(btn,e) {
+    ,unschedule: function(btn,e) {
         if (!this.menu.record || !this.menu.record.id) return false;
         var r = this.menu.record;
 
@@ -155,37 +155,3 @@ cmx.window.CreateItem = function(config) {
 };
 Ext.extend(cmx.window.CreateItem,MODx.Window);
 Ext.reg('cmx-window-item-create',cmx.window.CreateItem);
-
-
-cmx.window.UpdateItem = function(config) {
-    config = config || {};
-    this.ident = config.ident || 'meuitem'+Ext.id();
-    Ext.applyIf(config,{
-        title: _('cmx.item_update')
-        ,id: this.ident
-        ,height: 150
-        ,width: 475
-        ,url: cmx.config.connector_url
-        ,action: 'mgr/sent/update'
-        ,fields: [{
-            xtype: 'hidden'
-            ,name: 'id'
-            ,id: 'cmx-'+this.ident+'-id'
-        },{
-            xtype: 'textfield'
-            ,fieldLabel: _('name')
-            ,name: 'name'
-            ,id: 'cmx-'+this.ident+'-name'
-            ,width: 300
-        },{
-            xtype: 'textarea'
-            ,fieldLabel: _('description')
-            ,name: 'description'
-            ,id: 'cmx-'+this.ident+'-description'
-            ,width: 300
-        }]
-    });
-    cmx.window.UpdateItem.superclass.constructor.call(this,config);
-};
-Ext.extend(cmx.window.UpdateItem,MODx.Window);
-Ext.reg('cmx-window-item-update',cmx.window.UpdateItem);

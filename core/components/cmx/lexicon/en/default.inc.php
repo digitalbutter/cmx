@@ -55,6 +55,9 @@ $_lang['cmx.get_info'] = 'Get Campaign Details';
 $_lang['cmx.campaign_info'] = 'Campaign Details';
 $_lang['cmx.delete_campaign'] = 'Delete Campaign';
 $_lang['cmx.force_refresh'] = 'Force Refresh';
+$_lang['cmx.unschedule_campaign'] = 'Unschedule Campaign';
+
+$_lang['cmx.date_scheduled'] = 'Scheduled Date';
 
 $_lang['cmx.draft_campaigns'] = 'Draft Campaigns';
 $_lang['cmx.draft_campaigns_intro'] = 'View Draft Campaigns';
@@ -64,9 +67,12 @@ $_lang['cmx.scheduled_campaigns_intro'] = 'View Scheduled Campaigns';
 
 // campaign form buttons
 $_lang['cmx.save_draft'] = 'Save Draft';
-$_lang['cmx.confirm_save_draft'] = 'Are you sure want to save this campaign draft?  This will lock the campaign and content tabs, and allow you to schedule and preview the campaign.';
+$_lang['cmx.confirm_save_draft'] = 'Are you sure you want to save this campaign draft?  This will lock the campaign and content tabs, and allow you to schedule and preview the campaign.';
 $_lang['cmx.edit_draft'] = 'Edit Draft';
 $_lang['cmx.send_campaign'] = 'Send Campaign';
+$_lang['cmx.cmx.send_confirm_confirm'] = 'Are you sure you want to publish this campaign?  If no scheduled publish time has been set, the campaign will be sent immediately.';
+$_lang['cmx.test_campaign'] = 'Send Preview';
+$_lang['cmx.test_campaign_confirm'] = 'This will send a test campaign to the preview recipients specified.';
 
 // campaign form tabs
 $_lang['cmx.new_campaign'] = 'New Campaign';
@@ -92,8 +98,11 @@ $_lang['cmx.campaign_content_intro'] = 'Campaign Content';
 $_lang['cmx.campaign_content_label'] = 'Campaign Content';
 
 // schedule tab content
-$_lang['cmx.campaign_content_label'] = 'Schedule and Test Campaign';
-$_lang['cmx.schedule_campaign'] = 'Send the campaign at';
+$_lang['cmx.form_schedule_label'] = 'Schedule Campaign';
+$_lang['cmx.form_preview_recipients_label'] = 'Test Campaign';
+$_lang['cmx.confirmation_email_label'] = 'Email address to send the confirmation email to';
+$_lang['cmx.schedule_campaign'] = 'Schedule the campaign to be sent at';
+$_lang['cmx.preview_recipients_label'] = 'Preview recipients (separate email addresses by a comma)';
 
 // buttons
 $_lang['cmx.back'] = 'Cancel';

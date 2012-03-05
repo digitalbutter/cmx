@@ -25,7 +25,7 @@ class CMHandler {
     function getSentCampaigns() {
     	$filename = 'sent_campaigns.json';
     	$this->loadWrapperClass('csrest_clients');
-    	$list = array();
+    	$list = false;
     	FB::log($this->_force_flush);
     	
     	// Check for fresh cached results
@@ -57,7 +57,7 @@ class CMHandler {
     function getScheduledCampaigns() {
     	$filename = 'scheduled_campaigns.json';
     	$this->loadWrapperClass('csrest_clients');
-    	$list = array();
+    	$list = false;
 
     	// Check for fresh cached results
     	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
@@ -86,7 +86,7 @@ class CMHandler {
     function getDraftCampaigns() {
     	$filename = 'draft_campaigns.json';
     	$this->loadWrapperClass('csrest_clients');
-    	$list = array();
+    	$list = false;
 
     	// Check for fresh cached results
     	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
@@ -192,6 +192,22 @@ class CMHandler {
     	$campaign = $wrap->create($this->_client_id, $campaignData);
     	FB::log($campaignId);
     	return $campaign;
+    }
+
+    function sendCampaign($campaignID, $schedule) {
+    	$this->loadWrapperClass('csrest_campaigns');
+
+    	$wrap = new CS_REST_Campaigns($campaignID, $this->_api_key);
+    	$response = $wrap->send($schedule);
+    	return $response;
+    }
+
+    function sendPreview($campaignID, $recipients) {
+    	$this->loadWrapperClass('csrest_campaigns');
+
+    	$wrap = new CS_REST_Campaigns($campaignID, $this->_api_key);
+    	$response = $wrap->send_preview($recipients);
+    	return $response;
     }
 
     // Loads CM-CS class, throws error if not found
@@ -306,20 +322,27 @@ class CMHandler {
 		}
 	}
 
-    function setCampaignCache($content) {
+	function setCampaignCache($campaignID, $campaign) {
+		$filename = 'campaigns/'.$campaignID.'.json';
+
+		$success = $this->setCached($filename, $campaign);
+		return $success;
+	}
+
+    function setCampaignFiles($content) {
     	$rand = rand(111111111, 999999999);
     	$filename_html = $rand.'.html';
     	$filename_txt = $rand.'.txt';
 
-    	if (!file_exists($this->cache_path.'campaigns/'.$filename_html)) {
-    		if(!$this->setCached('campaigns/'.$filename_html, $content, false)) {
+    	if (!file_exists($this->cache_path.'campaigns_files/'.$filename_html)) {
+    		if(!$this->setCached('campaign_files/'.$filename_html, $content, false)) {
     			// problem saving html copy
     			return false;
     		}
     	} else return false;
 
-    	if (!file_exists($this->cache_path.'campaigns/'.$filename_txt)) {
-	    	if(!$this->setCached('campaigns/'.$filename_txt, $content, false)) {
+    	if (!file_exists($this->cache_path.'campaigns_files/'.$filename_txt)) {
+	    	if(!$this->setCached('campaign_files/'.$filename_txt, $content, false)) {
 				// problem saving txt copy
 				return false;
 			}
@@ -328,23 +351,23 @@ class CMHandler {
 		return $rand;
     }
 
-    function removeCampaignCache($fileId) {
+    function removeCampaignFiles($fileId) {
     	$filename_html = $fileId.'.html';
     	$filename_txt = $fileId.'.txt';
 
-    	if (!$this->removeCached('campaigns/'.$filename_html)) {
+    	if (!$this->removeCached('campaign_files/'.$filename_html)) {
     		return false;
     	}
 
-    	if (!$this->removeCached('campaigns/'.$filename_txt)) {
+    	if (!$this->removeCached('campaign_files/'.$filename_txt)) {
     		return false;
     	}
 
     	return true;
     }
 
-    function getCampaignCache($filename) {
-    	$content = $this->getCached('campaigns/'.$filename, false);
+    function getCampaignFiles($filename) {
+    	$content = $this->getCached('campaign_files/'.$filename, false);
 
     	if ($content) {
 			return $content;

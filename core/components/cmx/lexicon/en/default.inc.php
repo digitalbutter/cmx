@@ -55,7 +55,12 @@ $_lang['cmx.get_info'] = 'Get Campaign Details';
 $_lang['cmx.campaign_info'] = 'Campaign Details';
 $_lang['cmx.delete_campaign'] = 'Delete Campaign';
 $_lang['cmx.force_refresh'] = 'Force Refresh';
+$_lang['cmx.remove_campaign'] = 'Delete Campaign';
+$_lang['cmx.remove_campaign_confirm'] = 'Are you sure you want to delete this campaign?';
+$_lang['cmx.remove_campaign_success'] = 'Campaign deleted';
 $_lang['cmx.unschedule_campaign'] = 'Unschedule Campaign';
+$_lang['cmx.unschedule_campaign_confirm'] = 'Are you sure you want to unschedule this campaign? The campaign will be moved back to drafts.';
+$_lang['cmx.unschedule_campaign_success'] = 'Campaign Unscheduled';
 
 $_lang['cmx.date_scheduled'] = 'Scheduled Date';
 
@@ -70,9 +75,10 @@ $_lang['cmx.save_draft'] = 'Save Draft';
 $_lang['cmx.confirm_save_draft'] = 'Are you sure you want to save this campaign draft?  This will lock the campaign and content tabs, and allow you to schedule and preview the campaign.';
 $_lang['cmx.edit_draft'] = 'Edit Draft';
 $_lang['cmx.send_campaign'] = 'Send Campaign';
-$_lang['cmx.cmx.send_confirm_confirm'] = 'Are you sure you want to publish this campaign?  If no scheduled publish time has been set, the campaign will be sent immediately.';
+$_lang['cmx.send_confirm_confirm'] = 'Are you sure you want to publish this campaign?  If no scheduled publish time has been set, the campaign will be sent immediately.';
 $_lang['cmx.test_campaign'] = 'Send Preview';
 $_lang['cmx.test_campaign_confirm'] = 'This will send a test campaign to the preview recipients specified.';
+$_lang['cmx.test_campaign_success'] = 'Test Campaign has been successfully sent.';
 
 // campaign form tabs
 $_lang['cmx.new_campaign'] = 'New Campaign';

@@ -10,7 +10,6 @@ cmx.page.Edit = function(config) {
             ,renderTo: 'cmx-panel-edit-div'
         }]
         ,buttons: [{
-            // process: 'submit',
             text: _('cmx.save_draft')
             ,id: 'cmx-button-save_draft'
             ,hidden: (mode == 'schedule') ? true : false
@@ -43,12 +42,12 @@ cmx.page.Edit = function(config) {
                         ,id: id
                         ,confirmation_email: confirmationEmail
                         ,publish_at: schedule
-                        ,listeners: {
-                            'success': {fn:function(r) {
-                                
-                            }
-                            ,scope:this}
+                    }
+                    ,listeners: {
+                        'success': {fn:function(r) {
+                            window.location.href = '?a='+MODx.action['cmx:index']+'&force_refresh=1';
                         }
+                        ,scope:this}
                     }
                 });
             }
@@ -59,8 +58,6 @@ cmx.page.Edit = function(config) {
             ,handler: function() {
                 var id = Ext.getCmp('cmx-panel-edit').config.record.id;
                 var recipients = Ext.getCmp('cmx-preview_recipients').getValue();
-                console.log('id = '+id);
-                console.log('recipients = '+recipients);
 
                 MODx.msg.confirm({
                     title: _('cmx.test_campaign')
@@ -70,6 +67,13 @@ cmx.page.Edit = function(config) {
                         action: 'mgr/campaign_form/send_test'
                         ,id: id
                         ,recipients: recipients
+                    }
+                    ,listeners: {
+                        'success': {fn:function() { 
+                            MODx.msg.status({
+                                message: _('cmx.test_campaign_success')
+                            });
+                        },scope:this}
                     }
                 });
             }

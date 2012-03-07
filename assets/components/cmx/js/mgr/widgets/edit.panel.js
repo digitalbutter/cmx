@@ -235,6 +235,7 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
         return true;
     }
     ,success: function(r) {
+        console.log('edit panel success');
         Ext.getCmp('cmx-form-schedule').setDisabled(false);
         Ext.getCmp('modx-tabs').setActiveTab('form-schedule');
         Ext.getCmp('cmx-button-save_draft').hide();

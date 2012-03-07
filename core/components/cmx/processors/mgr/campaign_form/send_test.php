@@ -15,4 +15,4 @@ $response = $cm->sendPreview($campaignId, $recipients);
 
 FB::log($response);
 
-return $modx->error->success('',$response);
+return $modx->error->success('Successfully sent',$success);

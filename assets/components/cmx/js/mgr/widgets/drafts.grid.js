@@ -37,9 +37,7 @@ cmx.grid.Drafts = function(config) {
         ,tbar: [{
             text: _('cmx.force_refresh')
             ,handler: function() {
-                this.getStore().setBaseParam('refresh', true);
-                this.refresh();
-                this.getStore().setBaseParam('refresh', false);
+                forceRefreshAll();
             }
             ,scope: this
         }]
@@ -62,8 +60,8 @@ Ext.extend(cmx.grid.Drafts,MODx.grid.Grid,{
         // });
         m.push('-');
         m.push({
-            text: _('cmx.item_remove')
-            ,handler: this.removeItem
+            text: _('cmx.remove_campaign')
+            ,handler: this.removeCampaign
         });
         this.addContextMenuItem(m);
     }
@@ -103,19 +101,24 @@ Ext.extend(cmx.grid.Drafts,MODx.grid.Grid,{
         this.windows.updateItem.show(e.target);
     }
     
-    ,removeItem: function(btn,e) {
+    ,removeCampaign: function(btn,e) {
         if (!this.menu.record) return false;
         
         MODx.msg.confirm({
-            title: _('cmx.item_remove')
-            ,text: _('cmx.item_remove_confirm')
+            title: _('cmx.remove_campaign')
+            ,text: _('cmx.remove_campaign_confirm')
             ,url: this.config.url
             ,params: {
-                action: 'mgr/sent/remove'
-                ,id: this.menu.record.id
+                action: 'mgr/scheduled/remove'
+                ,id: this.menu.record['CampaignID']
             }
             ,listeners: {
-                'success': {fn:function(r) { this.refresh(); },scope:this}
+                'success': {fn:function(r) { 
+                    MODx.msg.status({
+                        message: _('cmx.remove_campaign_success')
+                    });
+                    forceRefresh(this);
+                 },scope:this}
             }
         });
     }

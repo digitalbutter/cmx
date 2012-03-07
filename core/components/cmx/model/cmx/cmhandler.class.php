@@ -29,13 +29,13 @@ class CMHandler {
     	FB::log($this->_force_flush);
     	
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush == false) {
     		FB::log('Cached Results');
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (empty($list) || $this->_force_flush === true) {
+    	if (empty($list) || $this->_force_flush == true) {
     		FB::log('Uncached Results');
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
@@ -198,17 +198,29 @@ class CMHandler {
     	$this->loadWrapperClass('csrest_campaigns');
 
     	$wrap = new CS_REST_Campaigns($campaignID, $this->_api_key);
-    	$response = $wrap->send($schedule);
-    	return $response;
+    	return $wrap->send($schedule);
     }
 
     function sendPreview($campaignID, $recipients) {
     	$this->loadWrapperClass('csrest_campaigns');
 
     	$wrap = new CS_REST_Campaigns($campaignID, $this->_api_key);
-    	$response = $wrap->send_preview($recipients);
-    	return $response;
+    	return $wrap->send_preview($recipients);
     }
+
+	function unschedule($campaignID) {
+		$this->loadWrapperClass('csrest_campaigns');
+
+    	$wrap = new CS_REST_Campaigns($campaignID, $this->_api_key);
+    	return $wrap->unschedule();
+	}
+
+	function removeCampaign($campaignID) {
+		$this->loadWrapperClass('csrest_campaigns');
+
+		$wrap = new CS_REST_Campaigns($campaignID, $this->_api_key);
+		return $wrap->delete();
+	}
 
     // Loads CM-CS class, throws error if not found
     function loadWrapperClass($classname) {
@@ -329,6 +341,20 @@ class CMHandler {
 		return $success;
 	}
 
+	function getCampaignCache($campaignID) {
+		$filename = 'campaigns/'.$campaignID.'.json';
+
+		$campaign = $this->getCached($filename, $campaign);
+		return $campaign;
+	}
+
+	function removeCamapaignCache($campaignID) {
+		$filename = 'campaigns/'.$campaignID.'.json';
+
+		$response = $this->removeCached($filename);
+		return $response;		
+	}
+
     function setCampaignFiles($content) {
     	$rand = rand(111111111, 999999999);
     	$filename_html = $rand.'.html';
@@ -385,7 +411,6 @@ class CMHandler {
 		}
 		return $data;
 	}
-
 
 	function searchResults($haystack, $needle) {
 		if(!empty($needle)) {

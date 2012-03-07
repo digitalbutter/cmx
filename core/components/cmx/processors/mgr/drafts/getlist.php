@@ -1,7 +1,7 @@
 <?php
 
 $refresh = $modx->getOption('refresh', $_REQUEST, false);
-
+FB::log($refresh);
 $isLimit = !empty($_REQUEST['limit']);
 $start = $modx->getOption('start',$_REQUEST,0);
 $limit = $modx->getOption('limit',$_REQUEST,20);

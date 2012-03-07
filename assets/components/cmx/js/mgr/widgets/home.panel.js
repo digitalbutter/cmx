@@ -3,6 +3,7 @@ cmx.panel.Home = function(config) {
     Ext.apply(config,{
         border: false
         ,baseCls: 'modx-formpanel'
+        ,id: 'cmx-panel-home'
         ,items: [{
             html: '<h2>'+_('cmx')+'</h2>'
             ,border: false

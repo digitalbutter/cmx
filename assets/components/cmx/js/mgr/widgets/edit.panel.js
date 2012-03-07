@@ -1,4 +1,3 @@
-
 /**
  * Loads the Template panel
  * 
@@ -15,7 +14,7 @@ cmx.panel.CampaignForm = function(config) {
         url: cmx.config.connector_url
         ,baseParams: {
             action: 'mgr/campaign_form/save'
-            ,id: (config.record) ? config.record.id : 0
+            ,id: campaign_id
         }
         ,id: 'cmx-panel-edit'
         ,cls: 'container form-with-labels'
@@ -141,6 +140,11 @@ cmx.panel.CampaignForm = function(config) {
                     ,anchor: '100%'
                     ,height: 400
                     ,value: config.record.content || ''
+                    ,listeners: {
+                        'afterrender': {fn:function() {
+                            MODx.loadRTE('modx-template-content');
+                        },scope:this}
+                    }
                 }]
             }]
         },{
@@ -209,6 +213,7 @@ cmx.panel.CampaignForm = function(config) {
         ,useLoadingMask: true
     });
     cmx.panel.CampaignForm.superclass.constructor.call(this,config);
+
     var isStatic = Ext.getCmp('modx-template-static');
     if (isStatic) { isStatic.on('check',this.toggleStaticFile); }
 };
@@ -218,6 +223,17 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
         if (this.initialized) { this.clearDirty(); return true; }
 
         this.getForm().setValues(this.config.record);
+
+        if (Ext.getCmp('cmx-panel-edit').baseParams['id'] != 0) {
+            this.config.record.id = campaign_id;
+            var form_elements = [];
+            form_elements = lookForElements(this,form_elements);
+
+            for(var j = 0, lenj = form_elements.length; j < lenj; j ++){
+                form_elements[j].setDisabled(true);
+            }
+            Ext.getCmp('modx-tabs').setActiveTab('form-schedule');
+        }
         // if (!Ext.isEmpty(this.config.record.templatename)) {
         //     Ext.getCmp('modx-template-header').getEl().update('<h2>'+_('template')+': '+this.config.record.templatename+'</h2>');
         // }
@@ -253,6 +269,10 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
         this.config.record.id = r.result.object.response;
 
     }
+    // ,afterrender: function() {
+    //     console.log('ready');
+    //     MODx.loadRTE('modx-template-content');
+    // }
 });
 Ext.reg('cmx-panel-edit',cmx.panel.CampaignForm);
 
@@ -270,3 +290,4 @@ function lookForElements(cmp, result){
     }
     return result;
 }
+

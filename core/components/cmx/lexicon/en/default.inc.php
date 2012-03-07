@@ -61,6 +61,7 @@ $_lang['cmx.remove_campaign_success'] = 'Campaign deleted';
 $_lang['cmx.unschedule_campaign'] = 'Unschedule Campaign';
 $_lang['cmx.unschedule_campaign_confirm'] = 'Are you sure you want to unschedule this campaign? The campaign will be moved back to drafts.';
 $_lang['cmx.unschedule_campaign_success'] = 'Campaign Unscheduled';
+$_lang['cmx.schedule_campaign_menuitem'] = 'Schedule Campaign';
 
 $_lang['cmx.date_scheduled'] = 'Scheduled Date';
 

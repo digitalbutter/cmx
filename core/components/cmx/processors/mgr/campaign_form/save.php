@@ -1,7 +1,5 @@
 <?php
 
-// FB::log($_POST);
-
 $campaignID = '';
 
 $campaign = array();
@@ -13,8 +11,6 @@ $campaign['FromEmail'] = $modx->getOption('from_email', $_POST, '');
 $campaign['ReplyTo'] = $modx->getOption('replyto', $_POST, '');
 $listids = $modx->getOption('lists', $_POST, array(''));
 $segmentids = $modx->getOption('segments', $_POST, array(''));
-
-// FB::log($listids);FB::log($segmentids);
 
 if ($listids[0] === '' && $segmentids[0] === '') {
 	return $modx->error->failure('Select a list or segment for this campaign');
@@ -28,8 +24,10 @@ if ($segmentids[0] !== '') {
 	$campaign['SegmentIDs'] = $segmentids;
 }
 
-// FB::log($campaign);
+
 $content = $modx->getOption('content', $_POST, '');
+$content = str_replace('<p> </p>', '<br/>', $content); // CM doesn't like that non breaking space TinyMCE adds between the p tags
+
 
 $cm = new CMHandler($modx);
 
@@ -39,9 +37,10 @@ if (!$fileId) {
 	return $modx->error->failure('Problem saving cache file');
 }
 
-$url = 'http://'.$_SERVER['HTTP_HOST'] . '/cmx/core/components/cmx/cache/campaign_files/';
+$url = 'http://'.$_SERVER['HTTP_HOST'] . $modx->getOption('cmx.assets_url') . 'cache/';
 $campaign['TextUrl'] = $url.$fileId.'.txt';
 $campaign['HtmlUrl'] = $url.$fileId.'.html';
+FB::log($campaign);
 
 $results = $cm->createCampaign($campaign);
 
@@ -51,7 +50,8 @@ if ($results->http_status_code == 201) {
 	// grab campaign ID
 	$campaignID = $results->response;
 	FB::log($campaignID);
-	// save a copy of everything in cache since we can't get this information through the API
+	// save a copy of everything in cache since we can't get this through the API
+	$campaign['Content'] = $content;
 	$cm->setCampaignCache($campaignID, $campaign);
 	return $modx->error->success('',$results);
 } else {

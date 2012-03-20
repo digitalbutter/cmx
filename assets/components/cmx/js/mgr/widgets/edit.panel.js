@@ -14,7 +14,7 @@ cmx.panel.CampaignForm = function(config) {
         url: cmx.config.connector_url
         ,baseParams: {
             action: 'mgr/campaign_form/save'
-            ,id: campaign_id
+            ,id: (MODx.request.id !== undefined) ? MODx.request.id : 0
         }
         ,id: 'cmx-panel-edit'
         ,cls: 'container form-with-labels'
@@ -58,7 +58,9 @@ cmx.panel.CampaignForm = function(config) {
                         name: 'name',
                         fieldLabel: _('cmx.campaign_name_label'),
                         width: 500,
-                        allowBlank: false
+                        allowBlank: false,
+                        value: config.record.Name || ''
+
                     }
                     ,{
                         xtype: 'textfield',
@@ -66,7 +68,8 @@ cmx.panel.CampaignForm = function(config) {
                         name: 'subject',
                         fieldLabel: _('cmx.campaign_subject_label'),
                         width: 500,
-                        allowBlank: false
+                        allowBlank: false,
+                        value: config.record.Subject || ''
                     }
                     ,{
                         xtype: 'textfield',
@@ -74,7 +77,8 @@ cmx.panel.CampaignForm = function(config) {
                         name: 'from_name',
                         fieldLabel: _('cmx.campaign_from_name_label'),
                         width: 500,
-                        allowBlank: false
+                        allowBlank: false,
+                        value: config.record.FromName || ''
                     }
                     ,{
                         xtype: 'textfield',
@@ -82,7 +86,8 @@ cmx.panel.CampaignForm = function(config) {
                         name: 'from_email',
                         fieldLabel: _('cmx.campaign_from_email_label'),
                         width: 500,
-                        allowBlank: false
+                        allowBlank: false,
+                        value: config.record.FromEmail || ''
                     }
                     ,{
                         xtype: 'textfield',
@@ -90,7 +95,8 @@ cmx.panel.CampaignForm = function(config) {
                         name: 'replyto',
                         fieldLabel: _('cmx.campaign_replyto_label'),
                         width: 500,
-                        allowBlank: false
+                        allowBlank: false,
+                        value: config.record.ReplyTo || ''
                     }
                     ,{
                         fieldLabel: _('cmx.lists_label')
@@ -101,6 +107,7 @@ cmx.panel.CampaignForm = function(config) {
                         ,resizable: true
                         ,width: 500
                         ,allowBlank: true
+                        ,value: config.record.ListIDs || ''
                     }
                     ,{
                         fieldLabel: _('cmx.segments_label')
@@ -111,6 +118,7 @@ cmx.panel.CampaignForm = function(config) {
                         ,resizable: true
                         ,width: 500
                         ,allowBlank: true
+                        ,value: config.record.SegmentIDs || ''
                     }]
                 }]
             }]
@@ -139,7 +147,7 @@ cmx.panel.CampaignForm = function(config) {
                     ,id: 'modx-template-content'
                     ,anchor: '100%'
                     ,height: 400
-                    ,value: config.record.content || ''
+                    ,value: config.record.Content || ''
                     ,listeners: {
                         'afterrender': {fn:function() {
                             MODx.loadRTE('modx-template-content');
@@ -151,7 +159,7 @@ cmx.panel.CampaignForm = function(config) {
             title: _('cmx.schedule_preview')
             ,itemId: 'form-schedule'
             ,id: 'cmx-form-schedule'
-            ,disabled: (mode == 'new') ? true : false
+            ,disabled: (MODx.request.mode == 'new') ? true : false
             ,layout: 'form'
             ,defaults: { autoHeight: true }
             ,items: [{
@@ -221,11 +229,11 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
     initialized: false
     ,setup: function() {
         if (this.initialized) { this.clearDirty(); return true; }
-
+        console.log(this.config.record);
         this.getForm().setValues(this.config.record);
 
         if (Ext.getCmp('cmx-panel-edit').baseParams['id'] != 0) {
-            this.config.record.id = campaign_id;
+            this.config.record.id = Ext.getCmp('cmx-panel-edit').baseParams['id'];
             var form_elements = [];
             form_elements = lookForElements(this,form_elements);
 

@@ -7,16 +7,20 @@ class CMHandler {
 	var $_cache_expiry;
 	var $_force_flush;
 	var $cache_path;
+	var $core_cache_path;
+	var $assets_cache_path;
 	var $wrapper_path;
 	var $resultCount;
 
-    function __construct(modX &$modx, $force_flush = false) {
+    function __construct(modX &$modx, $force_flush = 'false') {
 	    $this->modx =& $modx;
 
 	    $this->_api_key = $modx->getOption('cmx.api_key');
 	    $this->_client_id = $modx->getOption('cmx.client_id');
 	    $this->_force_flush = $force_flush;
 	    $this->cache_path = $this->modx->getOption('cmx.core_path') . 'cache/';
+	    $this->core_cache_path = $this->modx->getOption('cmx.core_path') . 'cache/';
+	    $this->assets_cache_path = $this->modx->getOption('cmx.assets_path') . 'cache/';
 	    $this->wrapper_path = dirname(__FILE__).'/cm-createsend/';
 	    $this->_cache_expiry = $this->modx->getOption('cmx.cache_expiry_limit') * 60;
 	    // $this->_cache_expiry = 3000 * 60;
@@ -26,16 +30,15 @@ class CMHandler {
     	$filename = 'sent_campaigns.json';
     	$this->loadWrapperClass('csrest_clients');
     	$list = false;
-    	FB::log($this->_force_flush);
     	
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename) && $this->_force_flush == false) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush == 'false') {
     		FB::log('Cached Results');
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (empty($list) || $this->_force_flush == true) {
+    	if (empty($list) || $this->_force_flush == 'true') {
     		FB::log('Uncached Results');
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
@@ -60,12 +63,12 @@ class CMHandler {
     	$list = false;
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === 'false') {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (!is_array($list) || $this->_force_flush === true) {
+    	if (!is_array($list) || $this->_force_flush === 'true') {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_scheduled();
@@ -89,12 +92,12 @@ class CMHandler {
     	$list = false;
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === 'false') {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (empty($list) || $this->_force_flush === true) {
+    	if (empty($list) || $this->_force_flush === 'true') {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_drafts();
@@ -119,12 +122,12 @@ class CMHandler {
     	$list = array();
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === 'false') {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (empty($list) || $this->_force_flush === true) {
+    	if (empty($list) || $this->_force_flush === 'true') {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_lists();
@@ -150,12 +153,12 @@ class CMHandler {
     	$list = array();
 
     	// Check for fresh cached results
-    	if ($this->cacheNotExpired($filename) && $this->_force_flush === false) {
+    	if ($this->cacheNotExpired($filename) && $this->_force_flush === 'false') {
     		$list = $this->getCached($filename);
     	}
     	
     	// Uncached Results
-    	if (empty($list) || $this->_force_flush === true) {
+    	if (empty($list) || $this->_force_flush === 'true') {
     		$list = array();
     		$wrap = new CS_REST_Clients($this->_client_id, $this->_api_key);
     		$result = $wrap->get_segments();
@@ -259,8 +262,6 @@ class CMHandler {
 		}
 
 		// Find the time elapsed since the cache was generated
-		// FB::log(($current_time - $time));
-		// FB::log($this->_cache_expiry);
 		if ( ($current_time - $time) < $this->_cache_expiry ) {
 			// use cache
 			return true;
@@ -283,13 +284,13 @@ class CMHandler {
 		$this->setCached('cache_times.json', $cache_times);
 	}
 
-	// grab the cache file and decode it
-	function getCached($filename, $useJSON = true) {
-		$path = $this->cache_path . $filename;
+	// grab the core cache file and decode it
+	function getCached($filename) {
+		$path = $this->core_cache_path . $filename;
 		$cached = '';
 		if (file_exists($path)) {
 			if ($cached = file_get_contents($path)) {
-				$results = ($useJSON) ? json_decode($cached, true) : $cached;
+				$results = json_decode($cached, true);
 				return $results;
 			} else {
 				$this->modx->log(modX::LOG_LEVEL_ERROR,'[CMx] Problem opening cache file ('.$filename.').');
@@ -301,10 +302,10 @@ class CMHandler {
 		}
 	}
 
-	// save a new cache file
-	function setCached($filename, $data, $useJSON = true) {
-		$path = $this->cache_path . $filename;
-		$data = ($useJSON) ? json_encode($data) : $data;
+	// save core cache file
+	function setCached($filename, $data) {
+		$path = $this->core_cache_path . $filename;
+		$data = json_encode($data);
 
 		if($data) { 
 		    if(file_put_contents($path, $data)) {
@@ -323,8 +324,41 @@ class CMHandler {
 		}
 	}
 
+	// remove core cached file
 	function removeCached($filename) {
-		$path = $this->cache_path . $filename;
+		$path = $this->core_cache_path . $filename;
+
+		if (file_exists($path)) {
+			unlink($path);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// save assets cache file
+	function setAssetsCached($filename, $data) {
+		$path = $this->assets_cache_path . $filename;
+
+		if($data) { 
+		    if(file_put_contents($path, $data)) {
+		      	return true;
+		    }
+		    // unable to save
+		    else {
+	    		$this->modx->log(modX::LOG_LEVEL_ERROR,'[CMx] Problem saving cache file ('.$filename.').');
+		      	return false;
+		    }
+		}
+		// unable to get contents
+		else {
+	    	$this->modx->log(modX::LOG_LEVEL_ERROR,'[CMx] Could not open cache file ('.$filename.') for writing.');
+			return false;
+		}
+	}
+
+	function removeAssetsCached($filename) {
+		$path = $this->assets_cache_path . $filename;
 
 		if (file_exists($path)) {
 			unlink($path);
@@ -344,7 +378,7 @@ class CMHandler {
 	function getCampaignCache($campaignID) {
 		$filename = 'campaigns/'.$campaignID.'.json';
 
-		$campaign = $this->getCached($filename, $campaign);
+		$campaign = $this->getCached($filename);
 		return $campaign;
 	}
 
@@ -356,19 +390,20 @@ class CMHandler {
 	}
 
     function setCampaignFiles($content) {
+    	require_once $this->modx->getOption('cmx.core_path',null,$this->modx->getOption('core_path').'components/cmx/') . 'library/html2text.php';
     	$rand = rand(111111111, 999999999);
     	$filename_html = $rand.'.html';
     	$filename_txt = $rand.'.txt';
 
-    	if (!file_exists($this->cache_path.'campaigns_files/'.$filename_html)) {
-    		if(!$this->setCached('campaign_files/'.$filename_html, $content, false)) {
+    	if (!file_exists($this->assets_cache_path.$filename_html)) {
+    		if(!$this->setAssetsCached($filename_html, $content)) {
     			// problem saving html copy
     			return false;
     		}
     	} else return false;
 
-    	if (!file_exists($this->cache_path.'campaigns_files/'.$filename_txt)) {
-	    	if(!$this->setCached('campaign_files/'.$filename_txt, $content, false)) {
+    	if (!file_exists($this->assets_cache_path.$filename_txt)) {
+	    	if(!$this->setAssetsCached($filename_txt, convert_html_to_text($content))) {
 				// problem saving txt copy
 				return false;
 			}
@@ -381,24 +416,24 @@ class CMHandler {
     	$filename_html = $fileId.'.html';
     	$filename_txt = $fileId.'.txt';
 
-    	if (!$this->removeCached('campaign_files/'.$filename_html)) {
+    	if (!$this->removeAssetsCached($filename_html)) {
     		return false;
     	}
 
-    	if (!$this->removeCached('campaign_files/'.$filename_txt)) {
+    	if (!$this->removeAssetsCached($filename_txt)) {
     		return false;
     	}
 
     	return true;
     }
 
-    function getCampaignFiles($filename) {
-    	$content = $this->getCached('campaign_files/'.$filename, false);
+   //  function getCampaignFiles($filename) {
+   //  	$content = $this->getAssetsCached($filename, false);
 
-    	if ($content) {
-			return $content;
-    	} else return false;
-    }
+   //  	if ($content) {
+			// return $content;
+   //  	} else return false;
+   //  }
 
 	function sortResults($data, $sort, $dir) {
 		if(!empty($sort)) {

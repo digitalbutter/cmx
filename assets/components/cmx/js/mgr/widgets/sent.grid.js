@@ -6,11 +6,17 @@ cmx.grid.Sent = function(config) {
         ,url: cmx.config.connector_url
         ,baseParams: {
             action: 'mgr/sent/getlist'
+            ,refresh: (MODx.request.refresh == '1') ? true : false
         }
         ,fields: ['CampaignID','Name','Subject','SentDate','TotalRecipients','WebVersionURL']
         ,autoHeight: true
         ,paging: true
         ,remoteSort: true
+        ,listeners: {
+            'afterrender': {fn:function(r) { 
+                this.getStore().setBaseParam('refresh', false);
+             },scope:this}
+        }
         ,columns: [{
             header: _('cmx.campaign_id')
             ,dataIndex: 'CampaignID'
@@ -40,11 +46,9 @@ cmx.grid.Sent = function(config) {
             ,width: 86
         }]
         ,tbar: [{
-            text: _('cmx.force_refresh')
+            text: _('cmx.refresh')
             ,handler: function() {
-                this.getStore().setBaseParam('refresh', true);
-                this.refresh();
-                this.getStore().setBaseParam('refresh', false);
+                forceRefreshAll();
             }
             ,scope: this
         }]

@@ -37,7 +37,7 @@ require_once $corePath.'model/cmx/cmx.class.php';
 $modx->cmx = new cmx($modx);
 
 // FirePHP
- require_once $corePath.'library/FirePHPCore/fb.php';
+require_once $corePath.'library/FirePHPCore/fb.php';
 
 // CM Create Send Handler
 if (!$modx->loadClass('CMHandler',$corePath.'model/cmx/',true,true)) {

@@ -6,11 +6,17 @@ cmx.grid.Scheduled = function(config) {
         ,url: cmx.config.connector_url
         ,baseParams: {
             action: 'mgr/scheduled/getlist'
+            ,refresh: (MODx.request.refresh == '1') ? true : false
         }
         ,fields: ['CampaignID','Name','Subject','DateCreated','PreviewURL','DateScheduled']
         ,autoHeight: true
         ,paging: true
         ,remoteSort: true
+        ,listeners: {
+            'afterrender': {fn:function(r) { 
+                this.getStore().setBaseParam('refresh', false);
+             },scope:this}
+        }
         ,columns: [{
             header: _('cmx.campaign_id')
             ,dataIndex: 'CampaignID'
@@ -32,9 +38,9 @@ cmx.grid.Scheduled = function(config) {
             ,dataIndex: 'DateScheduled'
         }]
         ,tbar: [{
-            text: _('cmx.force_refresh')
+            text: _('cmx.refresh')
             ,handler: function() {
-                forceRefresh(this);
+                forceRefreshAll();
             }
             ,scope: this
         }]

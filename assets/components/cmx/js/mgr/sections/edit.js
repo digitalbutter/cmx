@@ -3,22 +3,25 @@ Ext.onReady(function() {
 });
 
 cmx.page.Edit = function(config) {
+    console.log(campaign);
     config = config || {};
     Ext.applyIf(config,{
         components: [{
             xtype: 'cmx-panel-edit'
+            ,record: campaign
             ,renderTo: 'cmx-panel-edit-div'
         }]
         ,buttons: [{
             text: _('cmx.save_draft')
             ,id: 'cmx-button-save_draft'
-            ,hidden: (mode == 'schedule') ? true : false
+            ,hidden: (MODx.request.mode == 'schedule') ? true : false
             ,handler: function () {
                 Ext.MessageBox.confirm(
                     _('cmx.save_draft')
                     ,_('cmx.confirm_save_draft')
                     ,function(button) {
                         if (button == 'yes') {
+                            tinyMCE.triggerSave(true,true);
                             Ext.getCmp('cmx-panel-edit').submit();
                         }
                     }
@@ -27,7 +30,7 @@ cmx.page.Edit = function(config) {
         },{
             text: _('cmx.send_campaign')
             ,id: 'cmx-button-send_campaign'
-            ,hidden: (mode == 'new') ? true : false
+            ,hidden: (MODx.request.mode == 'new') ? true : false
             ,handler: function() {
                 var id = Ext.getCmp('cmx-panel-edit').config.record.id;
                 var confirmationEmail = Ext.getCmp('cmx-campaign-confirmation_email').getValue();
@@ -45,7 +48,7 @@ cmx.page.Edit = function(config) {
                     }
                     ,listeners: {
                         'success': {fn:function(r) {
-                            window.location.href = '?a='+MODx.action['cmx:index']+'&force_refresh=1';
+                            window.location.href = '?a='+MODx.action['cmx:index']+'&refresh=1';
                         }
                         ,scope:this}
                     }
@@ -54,7 +57,7 @@ cmx.page.Edit = function(config) {
         },{
             text: _('cmx.test_campaign')
             ,id: 'cmx-button-test_campaign'
-            ,hidden: (mode == 'new') ? true : false
+            ,hidden: (MODx.request.mode == 'new') ? true : false
             ,handler: function() {
                 var id = Ext.getCmp('cmx-panel-edit').config.record.id;
                 var recipients = Ext.getCmp('cmx-preview_recipients').getValue();
@@ -79,7 +82,7 @@ cmx.page.Edit = function(config) {
             }
         },{
             text: _('cmx.edit_draft')
-            ,hidden: (mode == 'new') ? true : false
+            ,hidden: (MODx.request.mode == 'new') ? true : false
             ,id: 'cmx-button-edit_draft'
             ,handler: function () {
                 // @TODO stub
@@ -89,7 +92,7 @@ cmx.page.Edit = function(config) {
             ,id: 'cmx-button-cancel'
             ,text: _('cmx.back')
             ,handler: function () {
-                window.location.href = '?a='+MODx.action['cmx:index'];
+                window.location.href = '?a='+MODx.action['cmx:index']+'&refresh=1';
             }
         }]
         

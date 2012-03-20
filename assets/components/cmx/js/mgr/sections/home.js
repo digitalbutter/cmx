@@ -24,17 +24,20 @@ Ext.extend(cmx.page.Home,MODx.Component);
 Ext.reg('cmx-page-home',cmx.page.Home);
 
 function forceRefresh(cmp) {
-    cmp.getStore().setBaseParam('refresh', true);
-    cmp.refresh();
-    cmp.getStore().setBaseParam('refresh', false);
+    cmp.getStore().lastOptions.params.refresh = true;
+    cmp.store.reload({
+        callback:function(){cmp.getStore().lastOptions.params.refresh = false;}
+    });
+    
 }
 
 function forceRefreshAll() {
     var tabs = Ext.getCmp('cmx-panel-home').items.items[1].items.items;
-    for (var i=0;i<3;i++) {
+    for (var i=0;i<tabs.length;i++) {
         var grid = tabs[i].items.items[1];
-        grid.getStore().setBaseParam('refresh', true);
-        grid.refresh();
-        grid.getStore().setBaseParam('refresh', false);
+        grid.getStore().lastOptions.params.refresh = true;
+        grid.store.reload({
+            callback:function(){grid.getStore().lastOptions.params.refresh = false;}
+        });
     }
 }

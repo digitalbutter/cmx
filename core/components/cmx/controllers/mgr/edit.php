@@ -5,16 +5,20 @@
 // );
 /* var campaign = " . $modx->toJSON($campaign) . "; */
 
-$modx->regClientStartupHTMLBlock(
-"
-<script>
-	var mode = '" . $modx->getOption('mode', $_REQUEST, 'new') . "';
-	var campaign_id = '". $modx->getOption('id', $_REQUEST, 0) . "';
-</script>
-");
+$campaignid = $modx->getOption('id', $_REQUEST, '0');
+$campaign = array();
+
+if ($campaignid !== '0') {
+	$corePath = $modx->getOption('cmx.core_path',null,$modx->getOption('core_path').'components/cmx/');
+    // CM Create Send Handler
+if (!$modx->loadClass('CMHandler',$corePath.'model/cmx/',true,true)) {
+    $modx->log(modX::LOG_LEVEL_ERROR,'[CMx] Could not load CMHandler class.');
+    return '';
+}
+	$campaign = require_once($modx->getOption('processorsPath',$modx->cmx->config,$corePath.'processors/').'mgr/campaign_form/load.php');
+}
 
 $modx->regClientCSS($cmx->config['cssUrl'].'superboxselect.css');
-// $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/SuperBoxSelect.js');
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/SuperBoxSelect.js');
 
 $modx->regClientStartupScript(MODX_MANAGER_URL . "assets/modext/util/datetime.js");
@@ -22,7 +26,7 @@ $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/edit.panel.js')
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/drafts.grid.js');
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/sections/edit.js');
 
-// Thanks to Mark Hamstra's code from the Gallery CMP - https://github.com/Mark-H/Gallery/commit/417f203685d147e018363cb4df0d627757d029da
+// Thanks to Mark Hamstra's code from the Gallery CMP
 /* If we want to use Tiny, we'll need some extra files. */
 $useTiny = $modx->getOption('cmx.use_richtext',$cmx->config,false);
 if ($useTiny) {
@@ -55,13 +59,20 @@ if ($useTiny) {
             'tiny.css_selectors' => (!empty($css)) ? $css : $modx->getOption('tiny.css_selectors'),
         );
         
-        require_once $tinyCorePath.'tinymce.class.php';
+        require_once $tinyCorePath.'tinymce.class.php'; 
         $tiny = new TinyMCE($modx,$tinyProperties);
         $tiny->setProperties($tinyProperties);
         $html = $tiny->initialize();
         $modx->regClientHTMLBlock($html);
     }
 }
+
+$modx->regClientStartupHTMLBlock(
+"
+<script>
+    var campaign = ".$modx->toJSON($campaign).";
+</script>
+");
 
 $output = '<div id="cmx-panel-edit-div"></div>';
 

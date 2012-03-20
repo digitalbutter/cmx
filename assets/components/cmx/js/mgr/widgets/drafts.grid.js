@@ -6,11 +6,17 @@ cmx.grid.Drafts = function(config) {
         ,url: cmx.config.connector_url
         ,baseParams: {
             action: 'mgr/drafts/getlist'
+            ,refresh: (MODx.request.refresh == '1') ? true : false
         }
         ,fields: ['CampaignID','Name','Subject','DateCreated','PreviewURL']
         ,autoHeight: true
         ,paging: true
         ,remoteSort: true
+        ,listeners: {
+            'afterrender': {fn:function(r) { 
+                this.getStore().setBaseParam('refresh', false);
+             },scope:this}
+        }
         ,columns: [{
             header: _('cmx.campaign_id')
             ,dataIndex: 'CampaignID'
@@ -35,7 +41,7 @@ cmx.grid.Drafts = function(config) {
             ,width: 86
         }]
         ,tbar: [{
-            text: _('cmx.force_refresh')
+            text: _('cmx.refresh')
             ,handler: function() {
                 forceRefreshAll();
             }

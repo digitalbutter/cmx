@@ -1,3 +1,5 @@
 .idea
 sftp-config.json
 .DS_Store
+config.core.php
+build.config.php

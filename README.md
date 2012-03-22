@@ -4,7 +4,7 @@ Campaign Monitor for MODx (CMx) is a component for MODx that allows you to send 
 
 ## Configuration
 
-After installing using the provided build script:
+Grab the provided zip from the [downloads section](https://github.com/digitalbutter/cmx/downloads "Downloads") or build a new one using the included build.transport.zip.  After installation make sure to set these system settings:
 
 1. Enter your API Key into the 'cmx.api_key' system setting.  This can be found in the Campaign Monitor manager interface.
 2. Enter your Client ID into the 'cmx.client_id' system setting.  Also can be found in the Campaign Monitor manager interface.
@@ -15,7 +15,7 @@ CMx uses a caching system that will store campaign information in JSON files.  T
 
 By default, the cache will refresh every 3 hrs or so, however when a new campaign is created the cache is automatically refreshed when you return to the list view.
 
-Also, Campaign Monitor requires a plain HTML and TXT file to load the campaign information from, therefore there is a secondary cache folder in the assets directory which will briefly create these files while the CM API is creating the campaign.  This needs to be assessable from to the web for CM to download the campaign. They're deleted automatically after the campaign draft is created.
+Also, Campaign Monitor requires a plain HTML and TXT file to load the campaign information from, therefore there is a secondary cache folder in the assets directory which will briefly create these files while the CM API is creating the campaign.  This needs to be accessable from to the web for CM to download the campaign. They're deleted automatically after the campaign draft is created.
 
 ## Things to add
 
@@ -29,3 +29,6 @@ While it's currently possible to create and view campaign info, this package is 
 
 * List Management:
 	Allow for the management of subscriber lists and segments.
+
+* General Cleanup:
+	Quite a bit of left over code from modExtra that isn't being used.

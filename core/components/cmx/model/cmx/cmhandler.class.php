@@ -23,7 +23,6 @@ class CMHandler {
 	    $this->assets_cache_path = $this->modx->getOption('cmx.assets_path') . 'cache/';
 	    $this->wrapper_path = dirname(__FILE__).'/cm-createsend/';
 	    $this->_cache_expiry = $this->modx->getOption('cmx.cache_expiry_limit') * 60;
-	    // $this->_cache_expiry = 3000 * 60;
     }
 
     function getSentCampaigns() {

@@ -3,3 +3,6 @@ sftp-config.json
 .DS_Store
 config.core.php
 build.config.php
+core/components/cmx/cache/*
+assets/components/cmx/cache/*
+!.gitignore

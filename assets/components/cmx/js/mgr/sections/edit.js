@@ -3,7 +3,6 @@ Ext.onReady(function() {
 });
 
 cmx.page.Edit = function(config) {
-    console.log(campaign);
     config = config || {};
     Ext.applyIf(config,{
         components: [{

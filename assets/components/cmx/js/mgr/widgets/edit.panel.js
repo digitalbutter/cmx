@@ -229,7 +229,6 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
     initialized: false
     ,setup: function() {
         if (this.initialized) { this.clearDirty(); return true; }
-        console.log(this.config.record);
         this.getForm().setValues(this.config.record);
 
         if (Ext.getCmp('cmx-panel-edit').baseParams['id'] != 0) {
@@ -259,7 +258,6 @@ Ext.extend(cmx.panel.CampaignForm,MODx.FormPanel,{
         return true;
     }
     ,success: function(r) {
-        console.log('edit panel success');
         Ext.getCmp('cmx-form-schedule').setDisabled(false);
         Ext.getCmp('modx-tabs').setActiveTab('form-schedule');
         Ext.getCmp('cmx-button-save_draft').hide();

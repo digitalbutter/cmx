@@ -34,7 +34,7 @@ set_time_limit(0);
 /* define package */
 define('PKG_NAME','cmx');
 define('PKG_NAME_LOWER',strtolower(PKG_NAME));
-define('PKG_VERSION','0.3');
+define('PKG_VERSION','0.5');
 define('PKG_RELEASE','');
 
 /* define sources */

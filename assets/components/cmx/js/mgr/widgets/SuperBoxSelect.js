@@ -5,7 +5,7 @@
  * @extends Ext.ux.form.SuperBoxSelect
  * @xtype modx-superbox-user
  */
-<link rel="stylesheet" href="{$assets_url}/components/superboxselect/css/superboxselect.css" />
+// <link rel="stylesheet" href="{$assets_url}/components/superboxselect/css/superboxselect.css" />
  
 cmx.combo.Lists = function (config) {
     config = config || {};
@@ -65,7 +65,6 @@ cmx.combo.PreviewRecipients = function (config) {
         ,displayField: "EmailAddress"
         ,listeners: {
             newitem: function(bs,v, f){
-                console.log(f);
                 // v = v.slice(0,1).toUpperCase() + v.slice(1).toLowerCase();
                 // var newObj = {
                 // id: v,

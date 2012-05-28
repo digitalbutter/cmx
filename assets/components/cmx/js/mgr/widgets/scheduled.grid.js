@@ -70,7 +70,6 @@ Ext.extend(cmx.grid.Scheduled,MODx.grid.Grid,{
     ,viewWebVersion: function(btn,e) {
         var r = this.menu.record;
         window.open(r["PreviewURL"]);
-        console.log(r);
     }
     ,unschedule: function(btn,e) {
         // if (!this.menu.record || !this.menu.record.id) return false;

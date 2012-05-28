@@ -187,6 +187,20 @@ class CMHandler {
     	return $list;
     }
 
+    function getCampaignBounces($campaignId,$sentDate,$page_number,$page_size,$order_field,$order_direction) {
+    	$this->loadWrapperClass('csrest_campaigns');
+
+    	$wrap = new CS_REST_Campaigns($campaignId, $this->_api_key);
+    	$result = $wrap->get_bounces($sentDate,$page_number,$page_size,$order_field,$order_direction);
+    	$list = array();
+    	foreach ($result->response->Results as $row) {
+    		$list[] = $row;
+    	}  
+
+    	// $this->resultCount = count($list);
+    	return $list;
+    }
+
     function createCampaign($campaignData) {
     	$this->loadWrapperClass('csrest_campaigns');
 

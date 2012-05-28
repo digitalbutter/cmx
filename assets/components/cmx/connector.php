@@ -38,6 +38,8 @@ $modx->cmx = new cmx($modx);
 
 // FirePHP
 require_once $corePath.'library/FirePHPCore/fb.php';
+// $firephp = FirePHP::getInstance(true);
+FB::setEnabled(false);
 
 // CM Create Send Handler
 if (!$modx->loadClass('CMHandler',$corePath.'model/cmx/',true,true)) {

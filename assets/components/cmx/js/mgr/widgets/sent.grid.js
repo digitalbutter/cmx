@@ -80,7 +80,7 @@ Ext.extend(cmx.grid.Sent,MODx.grid.Grid,{
     ,viewWebVersion: function(btn,e) {
         var r = this.menu.record;
         window.open(r["WebVersionURL"]);
-        console.log(r);
+        // console.log(r);
     }
     ,getSentInfo: function(btn,e) {
         this.showCampaignInfo = MODx.load({
@@ -125,58 +125,122 @@ cmx.window.SentCampaignInfo = function(config) {
     this.ident = config.record.CampaignID || 'campaign'+Ext.id();
     Ext.applyIf(config,{
         title: _('cmx.campaign_info')
-        ,id: this.ident
-        ,height: 300
-        ,minHeight: 300
-        ,width: 650
+        ,id: 'cmx-window-sentcampaigninfo'
+        ,layout: 'form'        
+        ,autoHeight: false
+        ,autoScroll: true
+        ,height: 600
+        ,allowDrop: false
+        ,shadow: false
+        ,width: 525
         ,url: cmx.config.connector_url
-        ,closeAction: 'destroy'
-        ,items: {html: '<div style="min-height:300px;padding:5px 0;" id="sent_info_content-'+config.record.CampaignID+'"></div>'}
+        // ,items: {html: '<div style="min-height:300px;padding:5px 0;" id="sent_info_content-'+config.record.CampaignID+'"></div>'}
+        ,fields: [{
+            xtype: 'modx-tabs'
+            // ,deferredRender: true
+            // ,anchor: '100%'
+            ,bodyStyle: 'padding: 10px 10px 10px 10px;'
+            ,border: true
+            ,layoutOnTabChange: true
+            ,defaults: {
+                border: false
+                // ,autoHeight: true    
+                ,bodyStyle: 'padding: 5px 8px 5px 5px;'
+                ,layout: 'form'
+                ,deferredRender: true
+                ,autoWidth: true
+                ,height: 400
+                // ,forceLayout: true
+            }
+            ,items: [{
+                title: _('cmx.campaign_info')
+                ,id: 'cmx-campaign_info'
+                // ,html: results.content
+                // ,padding: 10
+                ,layout: 'form'
+                // ,labelAlign: 'right'
+                ,labelWidth: 50
+                ,items: [{
+                    xtype: 'statictextfield',
+                    name: 'Recipients',
+                    id: 'Recipients',
+                    fieldLabel: _('cmx.recipients'),
+                    width: 200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'TotalOpened'
+                    ,fieldLabel: _('cmx.total_opened')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'Clicks'
+                    ,fieldLabel: _('cmx.clicks')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'Unsubscribed'
+                    ,fieldLabel: _('cmx.unsubscribed')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'Bounced'
+                    ,fieldLabel: _('cmx.bounced')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'UniqueOpened'
+                    ,fieldLabel: _('cmx.unique_opened')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'WebVersionURL'
+                    ,fieldLabel: _('cmx.web_version_url')
+                    ,width:300
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'Forwards'
+                    ,fieldLabel: _('cmx.forwards')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'Likes'
+                    ,fieldLabel: _('cmx.likes')
+                    // ,width:200
+                },{
+                    xtype: 'statictextfield'
+                    ,name: 'Mentions'
+                    ,fieldLabel: _('cmx.mentions')
+                    // ,width:200
+                }]
+            },{
+                title: _('cmx.bounce_tab')
+                ,items:[{
+                    xtype: 'cmx-grid-bounces'
+                    ,record: config.record
+                }]
+            }]
+        }]
     });
 
     cmx.window.SentCampaignInfo.superclass.constructor.call(this,config);
 
     this.on('afterrender', function() {
-        console.log('show hit');
-        this.getSentCampaignInfo(this.config.record);
-    },this);
-};
-Ext.extend(cmx.window.SentCampaignInfo,MODx.Window);
-
-Ext.extend(cmx.window.SentCampaignInfo,MODx.Window,{
-    getSentCampaignInfo: function(record) {
         Ext.Ajax.request({
             url: cmx.config.connector_url
             ,params: {
                 action: "mgr/sent/info"
-                ,id: record.CampaignID
+                ,id: this.config.record.CampaignID
             }
             ,method: 'POST'
             ,success: function(response, options) {
-
                 var results = Ext.util.JSON.decode(response.responseText).results;
-                // console.log(results);
-                // console.log(options);
-
-
-                var tabs = new Ext.TabPanel({
-                    renderTo: 'sent_info_content-'+record.CampaignID
-                    ,activeTab: 0
-                    ,autoShow: true
-                    ,height: 300
-                    ,plain: true
-                    ,margins: '5 5 5 5'
-                    ,autoScroll: true
-                    ,resizeable: true
-                    ,items: [{
-                            title: _('cmx.campaign_info')
-                            ,html: results.content
-                            ,padding: 10
-                        }
-                    ]
-                });
+                Ext.getCmp('cmx-window-sentcampaigninfo').fp.getForm().setValues(results);
             }
         });
-    }
-});
+    },this);
+};
+Ext.extend(cmx.window.SentCampaignInfo,MODx.Window);
+
 Ext.reg('cmx-window-item-info',cmx.window.SentCampaignInfo);
+
+

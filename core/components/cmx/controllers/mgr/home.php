@@ -27,6 +27,7 @@
  */
  
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/sent.grid.js');
+$modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/bounces.grid.js');
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/drafts.grid.js');
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/scheduled.grid.js');
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/home.panel.js');

@@ -111,5 +111,20 @@ $_lang['cmx.confirmation_email_label'] = 'Email address to send the confirmation
 $_lang['cmx.schedule_campaign'] = 'Schedule the campaign to be sent at';
 $_lang['cmx.preview_recipients_label'] = 'Preview recipients (separate email addresses by a comma)';
 
+// campaign summary
+$_lang['cmx.recipients'] = 'Recipients';
+$_lang['cmx.total_opened'] = 'Total Opened';
+$_lang['cmx.clicks'] = 'Clicks';
+$_lang['cmx.unsubscribed'] = 'Unsubscribed';
+$_lang['cmx.bounced'] = 'Bounced';
+$_lang['cmx.unique_opened'] = 'Unique Opened';
+$_lang['cmx.web_version_url'] = 'Web Version URL';
+$_lang['cmx.web_version_url'] = 'Web Version URL';
+$_lang['cmx.forwards'] = 'Forwards';
+$_lang['cmx.likes'] = 'Likes';
+$_lang['cmx.mentions'] = 'Mentions';
+$_lang['cmx.bounce_tab'] = 'Bounce Stats';
+
+
 // buttons
 $_lang['cmx.back'] = 'Cancel';

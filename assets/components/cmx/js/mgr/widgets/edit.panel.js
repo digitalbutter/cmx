@@ -150,7 +150,9 @@ cmx.panel.CampaignForm = function(config) {
                     ,value: config.record.Content || ''
                     ,listeners: {
                         'afterrender': {fn:function() {
-                            MODx.loadRTE('modx-template-content');
+                            if (useRTE) {
+                                MODx.loadRTE('modx-template-content');
+                            }
                         },scope:this}
                     }
                 }]

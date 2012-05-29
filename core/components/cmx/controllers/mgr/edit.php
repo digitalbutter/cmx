@@ -26,7 +26,7 @@ $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/edit.panel.js')
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/widgets/drafts.grid.js');
 $modx->regClientStartupScript($cmx->config['jsUrl'].'mgr/sections/edit.js');
 
-// Thanks to Mark Hamstra's code from the Gallery CMP
+// Mark Hamstra's code from the Gallery CMP
 /* If we want to use Tiny, we'll need some extra files. */
 $useTiny = $modx->getOption('cmx.use_richtext',$cmx->config,false);
 if ($useTiny) {
@@ -64,13 +64,16 @@ if ($useTiny) {
         $tiny->setProperties($tinyProperties);
         $html = $tiny->initialize();
         $modx->regClientHTMLBlock($html);
-    }
+    } else {
+        $useTiny = 'false';
+    } 
 }
 
 $modx->regClientStartupHTMLBlock(
 "
 <script>
     var campaign = ".$modx->toJSON($campaign).";
+    var useRTE = ".$useTiny.";
 </script>
 ");
 

@@ -38,6 +38,7 @@ $settings['gallery.']->fromArray(array(
 ),'',true,true);
 */
 
+// base
 $settings['cmx.api_key'] = $modx->newObject('modSystemSetting');
 $settings['cmx.api_key']->fromArray(array(
 		'key' => 'cmx.api_key',
@@ -58,13 +59,33 @@ $settings['cmx.client_id']->fromArray(array(
 
 $settings['cmx.use_chunk'] = $modx->newObject('modSystemSetting');
 $settings['cmx.use_chunk']->fromArray(array(
-		'key' => 'cmx.use_chunk',
+		'key' => 'cmx.client_id',
 		'value' => '',
 		'xtype' => 'textfield',
 		'namespace' => 'cmx',
 		'area' => 'Authentication & Base'
 ),'',true,true);
 
+$settings['cmx.static_file_path'] = $modx->newObject('modSystemSetting');
+$settings['cmx.static_file_path']->fromArray(array(
+		'key' => 'cmx.static_file_path',
+		'value' => '',
+		'xtype' => 'textfield',
+		'namespace' => 'cmx',
+		'area' => 'Authentication & Base'
+),'',true,true);
+
+$settings['cmx.static_file_url'] = $modx->newObject('modSystemSetting');
+$settings['cmx.static_file_url']->fromArray(array(
+		'key' => 'cmx.static_file_url',
+		'value' => '',
+		'xtype' => 'textfield',
+		'namespace' => 'cmx',
+		'area' => 'Authentication & Base'
+),'',true,true);
+
+
+// caching
 $settings['cmx.core_path'] = $modx->newObject('modSystemSetting');
 $settings['cmx.core_path']->fromArray(array(
 		'key' => 'cmx.core_path',
@@ -87,15 +108,6 @@ $settings['cmx.assets_url'] = $modx->newObject('modSystemSetting');
 $settings['cmx.assets_url']->fromArray(array(
 		'key' => 'cmx.assets_url',
 		'value' => '{base_url}assets/components/cmx/',
-		'xtype' => 'textfield',
-		'namespace' => 'cmx',
-		'area' => 'Caching'
-),'',true,true);
-
-$settings['cmx.cache_expiry_limit'] = $modx->newObject('modSystemSetting');
-$settings['cmx.cache_expiry_limit']->fromArray(array(
-		'key' => 'cmx.cache_expiry_limit',
-		'value' => '180',
 		'xtype' => 'textfield',
 		'namespace' => 'cmx',
 		'area' => 'Caching'

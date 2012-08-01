@@ -24,6 +24,12 @@ if ($segmentids[0] !== '') {
 	$campaign['SegmentIDs'] = $segmentids;
 }
 // var_dump($scriptProperties);exit;
+$rand = rand(111111111, 999999999);
+$staticFileUrl = $modx->getOption('cmx.static_file_url',null,'');
+if (!empty($staticFileUrl)) {
+	$staticFile = $staticFileUrl.$rand.'.html';
+	$scriptProperties['url'] = $staticFile; 
+}
 
 $chunk = $modx->getOption('cmx.use_chunk', null, '');
 if (!empty($chunk)) {
@@ -35,7 +41,7 @@ if (!empty($chunk)) {
 
 $cm = new CMHandler($modx);
 
-$fileId = $cm->setCampaignFiles($content);
+$fileId = $cm->setCampaignFiles($content, $rand);
 
 if (!$fileId) {
 	return $modx->error->failure('Problem saving cache file');

@@ -1,4 +1,5 @@
 Ext.onReady(function() {
+    Ext.getCmp('modx-layout').hideLeftbar(); 
     MODx.load({ xtype: 'cmx-page-home'});
 });
 

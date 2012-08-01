@@ -350,11 +350,14 @@ class CMHandler {
 	}
 
 	// save assets cache file
-	function setAssetsCached($filename, $data) {
-		$path = $this->assets_cache_path . $filename;
+	function setAssetsCached($filename, $path, $data) {
+		$filePath = $path.$filename;
 
 		if($data) { 
-		    if(file_put_contents($path, $data)) {
+		    if (!is_dir($path)) {
+				mkdir($path, 777, true);
+			}
+			if(file_put_contents($filePath, $data)) {
 		      	return true;
 		    }
 		    // unable to save
@@ -402,25 +405,37 @@ class CMHandler {
 		return $response;		
 	}
 
-    function setCampaignFiles($content) {
+    function setCampaignFiles($content, $rand) {
     	require_once $this->modx->getOption('cmx.core_path',null,$this->modx->getOption('core_path').'components/cmx/') . 'library/html2text.php';
-    	$rand = rand(111111111, 999999999);
+    	$path = $this->assets_cache_path;
     	$filename_html = $rand.'.html';
     	$filename_txt = $rand.'.txt';
+    	$staticPath = $this->modx->getOption('cmx.static_file_path',null,'');
 
-    	if (!file_exists($this->assets_cache_path.$filename_html)) {
-    		if(!$this->setAssetsCached($filename_html, $content)) {
+    	if (!file_exists($path.$filename_html)) {
+    		if(!$this->setAssetsCached($filename_html, $path, $content)) {
     			// problem saving html copy
     			return false;
     		}
     	} else return false;
 
-    	if (!file_exists($this->assets_cache_path.$filename_txt)) {
-	    	if(!$this->setAssetsCached($filename_txt, convert_html_to_text($content))) {
+    	if (!file_exists($path.$filename_txt)) {
+	    	if(!$this->setAssetsCached($filename_txt, $path, convert_html_to_text($content))) {
 				// problem saving txt copy
 				return false;
 			}
 		} else return false;
+
+		if (!empty($staticPath)) {
+			// $staticFilePath = $rand.'.html';
+			if (!file_exists($staticPath.$filename_html)) {
+				// var_dump($filename_html, $staticPath);exit;
+	    		if(!$this->setAssetsCached($filename_html, $staticPath, $content)) {
+	    			// problem saving html copy
+	    			return false;
+	    		}
+	    	} else return false;
+	    }
 
 		return $rand;
     }

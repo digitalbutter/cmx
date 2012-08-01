@@ -56,6 +56,15 @@ $settings['cmx.client_id']->fromArray(array(
 		'area' => 'Authentication & Base'
 ),'',true,true);
 
+$settings['cmx.use_chunk'] = $modx->newObject('modSystemSetting');
+$settings['cmx.use_chunk']->fromArray(array(
+		'key' => 'cmx.use_chunk',
+		'value' => '',
+		'xtype' => 'textfield',
+		'namespace' => 'cmx',
+		'area' => 'Authentication & Base'
+),'',true,true);
+
 $settings['cmx.core_path'] = $modx->newObject('modSystemSetting');
 $settings['cmx.core_path']->fromArray(array(
 		'key' => 'cmx.core_path',
@@ -101,6 +110,8 @@ $settings['cmx.cache_expiry_limit']->fromArray(array(
 		'area' => 'Caching'
 ),'',true,true);
 
+
+// tinyMCE settings
 $settings['cmx.tiny.buttons1'] = $modx->newObject('modSystemSetting');
 $settings['cmx.tiny.buttons1']->fromArray(array(
 		'key' => 'cmx.tiny.buttons1',
@@ -209,9 +220,9 @@ $settings['cmx.tiny.width']->fromArray(array(
 		'area' => 'TinyMCE'
 ),'',true,true);
 
-$settings['cmx.tiny.richtext'] = $modx->newObject('modSystemSetting');
-$settings['cmx.tiny.richtext']->fromArray(array(
-		'key' => 'cmx.tiny.richtext',
+$settings['cmx.use_richtext'] = $modx->newObject('modSystemSetting');
+$settings['cmx.use_richtext']->fromArray(array(
+		'key' => 'cmx.use_richtext',
 		'value' => 'true',
 		'xtype' => 'boolean',
 		'namespace' => 'cmx',

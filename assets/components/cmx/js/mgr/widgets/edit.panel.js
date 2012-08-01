@@ -139,6 +139,24 @@ cmx.panel.CampaignForm = function(config) {
                 ,cls:'main-wrapper'
                 ,labelAlign: 'top'
                 ,items: [{
+                    xtype: 'textfield',
+                    cls: 'new-item',
+                    name: 'pagetitle',
+                    fieldLabel: _('cmx.pagetitle'),
+                    width: 300,
+                    allowBlank: true,
+                    value: config.record.ReplyTo || ''
+                },{
+                    xtype: 'datefield'
+                    ,fieldLabel: _('cmx.publishedon')
+                    // ,description: '<b>[[*publishedon]]</b><br />'+_('resource_publishedon_help')
+                    ,name: 'publishedon'
+                    ,id: 'cmx-publish-at'
+                    ,allowBlank: true
+                    ,format: 'Y-m-d'
+                    ,dateWidth: 120
+                    // ,value: config.record.publishedon
+                },{
                     xtype: 'textarea'
                     ,cls: 'new-item'
                     ,fieldLabel: _('template_code')                     

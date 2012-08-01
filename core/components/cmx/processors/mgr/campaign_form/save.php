@@ -23,11 +23,15 @@ if ($listids[0] !== '') {
 if ($segmentids[0] !== '') {
 	$campaign['SegmentIDs'] = $segmentids;
 }
+// var_dump($scriptProperties);exit;
 
-
-$content = $modx->getOption('content', $_POST, '');
-$content = str_replace('<p> </p>', '<br/>', $content); // CM doesn't like that non breaking space TinyMCE adds between the p tags
-
+$chunk = $modx->getOption('cmx.use_chunk', null, '');
+if (!empty($chunk)) {
+	$content = $modx->getChunk($chunk, $scriptProperties);
+} else {
+	$content = $scriptProperties['content'];
+	$content = str_replace('<p> </p>', '<br/>', $content); // CM doesn't like that non breaking space TinyMCE adds between the p tags
+}
 
 $cm = new CMHandler($modx);
 

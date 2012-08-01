@@ -99,6 +99,8 @@ $_lang['cmx.campaign_from_name_label'] = 'The name of the sender of this campaig
 $_lang['cmx.campaign_from_email_label'] = 'The email address of the sender of this campaign';
 $_lang['cmx.campaign_replyto_label'] = 'Replies should be sent to';
 $_lang['cmx.lists_label'] = 'Lists';
+$_lang['cmx.pagetitle'] = 'Page Title';
+$_lang['cmx.publishedon'] = 'Published On';
 
 // content tab content
 $_lang['cmx.campaign_content_intro'] = 'Campaign Content';
